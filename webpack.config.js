@@ -1,15 +1,19 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
     entry: {
+        lodash1: ['lodash', './src/index2.js'],
         main: {
-            import: './src/index.js'
+            import: './src/index.js',
+            dependOn: 'lodash1'
         },
-        main2: {
-            // filename: './src/index2.js',
-            import: './src/index2.js'
-        }
+        // main2: {
+        //     // filename: './src/index2.js',
+        //     import: './src/index2.js',
+        //     dependOn: 'lodash1'
+        // },
     },
     output: {
         filename: '[name].main.js',
@@ -24,17 +28,10 @@ module.exports = {
         ]
     },
     optimization: {
-        splitChunks: {
-          cacheGroups: {
-            styles: {
-              name: 'styles',
-              type: 'css/mini-extract',
-              test: /\.css$/,
-              chunks: 'all',
-              enforce: true,
-            },
-          },
-        },
+        minimize: true,
+        minimizer: [
+          new CssMinimizerPlugin(),
+        ]
       },
       plugins: [
         new MiniCssExtractPlugin({
